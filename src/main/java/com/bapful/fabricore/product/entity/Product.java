@@ -32,11 +32,14 @@ public class Product extends BaseAudit {
     @Column(name = "product_name", nullable = false, length = 200)
     private String productName;
 
+    @Column(name = "season_code", nullable = false, length = 20)
+    private String seasonCode;
+
     @Column(name = "category_id", nullable = false)
     private Long categoryId;
 
-    @Column(name = "season_code", nullable = false, length = 20)
-    private String seasonCode;
+    @Column(name = "color_code", nullable = false, length = 20)
+    private String colorCode;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender_type", length = 20)
@@ -54,16 +57,18 @@ public class Product extends BaseAudit {
     public Product(
             String productCode,
             String productName,
-            Long categoryId,
             String seasonCode,
+            Long categoryId,
+            String colorCode,
             GenderType genderType,
             LaunchStatus launchStatus,
             String description
     ) {
         this.productCode = productCode;
         this.productName = productName;
-        this.categoryId = categoryId;
         this.seasonCode = seasonCode;
+        this.categoryId = categoryId;
+        this.colorCode = colorCode;
         this.genderType = genderType;
         this.launchStatus = launchStatus;
         this.description = description;
@@ -72,15 +77,17 @@ public class Product extends BaseAudit {
     public void updateBasicInfo(
             String productCode,
             String productName,
-            Long categoryId,
             String seasonCode,
+            Long categoryId,
+            String colorCode,
             GenderType genderType,
             String description
     ) {
         this.productCode = productCode;
         this.productName = productName;
-        this.categoryId = categoryId;
         this.seasonCode = seasonCode;
+        this.categoryId = categoryId;
+        this.colorCode = colorCode;
         this.genderType = genderType;
         this.description = description;
     }
