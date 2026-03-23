@@ -1,18 +1,20 @@
-package com.bapful.fabricore.product.enums;
+package com.bapful.fabricore.global.approval.enums;
 
 import lombok.Getter;
 
 @Getter
 public enum ApprovalStatus {
+
     PENDING("대기"),
     IN_PROGRESS("진행 중"),
     APPROVED("승인"),
     REJECTED("반려");
 
-    private final String description;
+    private final String label;
 
-    ApprovalStatus(String description) {
-        this.description = description;
+    ApprovalStatus(String label) {
+        this.label = label;
     }
+
 }
 
