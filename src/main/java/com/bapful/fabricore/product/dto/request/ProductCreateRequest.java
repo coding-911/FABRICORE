@@ -13,11 +13,14 @@ public class ProductCreateRequest {
     @JsonProperty("product_name")
     private String productName;
 
+    @JsonProperty("season_code")
+    private String seasonCode;
+
     @JsonProperty("category_id")
     private Long categoryId;
 
-    @JsonProperty("season_code")
-    private String seasonCode;
+    @JsonProperty("color_code")
+    private String colorCode;
 
     @JsonProperty("genderType")
     private GenderType genderType;

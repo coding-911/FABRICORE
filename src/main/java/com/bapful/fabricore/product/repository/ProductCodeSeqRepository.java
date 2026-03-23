@@ -6,8 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface ProductCodeSeqRepository extends JpaRepository<ProductCodeSeq, Long> {
-    Optional<ProductCodeSeq> findBySeasonCodeAndCategoryId(
+    Optional<ProductCodeSeq> findBySeasonCodeAndCategoryIdAndColorCode(
             String seasonCode,
-            Long categoryId
+            Long categoryId,
+            String colorCode
     );
 }

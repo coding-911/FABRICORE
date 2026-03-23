@@ -22,6 +22,9 @@ public class ProductCodeSeq {
     @Column(name = "category_id", nullable = false)
     private Long categoryId;
 
+    @Column(name = "color_code", nullable = false)
+    private String colorCode;
+
     @Column(name = "next_seq", nullable = false)
     private Long nextSeq;
 
