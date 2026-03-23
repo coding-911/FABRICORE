@@ -2,13 +2,12 @@ package com.bapful.fabricore.product.controller;
 
 import com.bapful.fabricore.product.dto.request.ProductCreateRequest;
 import com.bapful.fabricore.product.entity.Product;
+import com.bapful.fabricore.product.enums.LaunchStatus;
 import com.bapful.fabricore.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,40 +23,27 @@ public class ProductController {
         return productService.createProduct(request, requesterId);
     }
 
-    @PostMapping("/{productId}/workflows/{workflowId}/approvals/{approvalId}/approve")
-    public ResponseEntity<Void> approveWorkflow(
-            @PathVariable Long productId,
-            @PathVariable Long workflowId,
-            @PathVariable Long approvalId,
-            @RequestBody WorkflowApprovalActionRequest request
+    @GetMapping
+    public List<Product> getProducts() {
+        return productService.getProducts();
+    }
+
+    @GetMapping("/{product_id}")
+    public Product getProduct(@PathVariable("product_id") Long productId) {
+        return productService.getProduct(productId);
+    }
+
+    // 상품 출시 단계 수동 변경
+    @PostMapping("/{product_id}/change-status-manually")
+    public Boolean changeStatusManually(
+            @PathVariable("product_id") Long productId,
+            @RequestParam("launch_status") LaunchStatus launchStatus
     ) {
-        UUID approverId = UUID.randomUUID(); // 임시
-        productService.approveWorkflow(productId, workflowId, approvalId, approverId, request);
-        return ResponseEntity.ok().build();
+        //TODO 로그인 id로 변경 필요
+        UUID memberId = UUID.randomUUID();
+        productService.changeStatusManually(productId, launchStatus);
+        return false;
     }
 
-    @PostMapping("/{productId}/workflows/{workflowId}/approvals/{approvalId}/reject")
-    public ResponseEntity<Void> rejectWorkflow(
-            @PathVariable Long productId,
-            @PathVariable Long workflowId,
-            @PathVariable Long approvalId,
-            @RequestBody WorkflowApprovalActionRequest request
-    ) {
-        UUID approverId = UUID.randomUUID(); // 임시
-        productService.rejectWorkflow(productId, workflowId, approvalId, approverId, request);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/{productId}/status/producing")
-    public ResponseEntity<Void> changeToProducing(@PathVariable Long productId) {
-        productService.changeToProducing(productId);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/{productId}/status/on-sale")
-    public ResponseEntity<Void> changeToOnSale(@PathVariable Long productId) {
-        productService.changeToOnSale(productId);
-        return ResponseEntity.ok().build();
-    }
 
 }

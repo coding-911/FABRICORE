@@ -1,6 +1,7 @@
 package com.bapful.fabricore.product.entity;
 
-import com.bapful.fabricore.product.enums.ApprovalStatus;
+import com.bapful.fabricore.global.approval.entity.ApprovalDocument;
+import com.bapful.fabricore.global.approval.enums.ApprovalStatus;
 import com.bapful.fabricore.product.enums.LaunchStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,17 +10,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
-@Table(name = "product_status_workflow")
+@Table(name = "product_status")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_status_workflow_id")
+    @Column(name = "product_status_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -34,53 +34,34 @@ public class ProductStatus {
     @Column(name = "to_status", nullable = false, length = 30)
     private LaunchStatus toStatus;
 
-    @Column(name = "requested_by", nullable = false)
-    private UUID requestedBy;
+    @Column(name = "approval_document_id", unique = true)
+    private Long approvalDocumentId;
 
-    @Column(name = "requested_at", nullable = false)
-    private LocalDateTime requestedAt;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "approval_status", nullable = false, length = 20)
-    private ApprovalStatus approvalStatus;
-
-    @Column(name = "comment", length = 500)
-    private String comment;
-
-    @Column(name = "completed_at")
-    private LocalDateTime completedAt;
+    @Column(name = "stauts_changed_at", nullable = false)
+    private LocalDateTime statusChangedAt;
 
     @Builder
     public ProductStatus(
             Product product,
             LaunchStatus fromStatus,
             LaunchStatus toStatus,
-            UUID requestedBy,
-            LocalDateTime requestedAt,
-            String comment,
-            LocalDateTime completedAt
+            LocalDateTime statusChangedAt
     ) {
         this.product = product;
         this.fromStatus = fromStatus;
         this.toStatus = toStatus;
-        this.requestedBy = requestedBy;
-        this.requestedAt = requestedAt;
-        this.approvalStatus = ApprovalStatus.PENDING;
-        this.comment = comment;
-        this.completedAt = completedAt;
+        this.statusChangedAt = statusChangedAt;
     }
 
-    public void startApproval() {
-        this.approvalStatus = ApprovalStatus.IN_PROGRESS;
+    public void mapApprovalDocument(Long approvalDocumentId) {
+        if (this.approvalDocumentId != null) {
+            throw new IllegalStateException("이미 결재 문서가 연결되어 있습니다.");
+        }
+        this.approvalDocumentId = approvalDocumentId;
     }
 
-    public void approveAll() {
-        this.approvalStatus = ApprovalStatus.APPROVED;
-        this.completedAt = LocalDateTime.now();
+    public void setStatusChangedAt(LocalDateTime statusChangedAt) {
+        this.statusChangedAt = statusChangedAt;
     }
 
-    public void reject() {
-        this.approvalStatus = ApprovalStatus.REJECTED;
-        this.completedAt = LocalDateTime.now();
-    }
 }

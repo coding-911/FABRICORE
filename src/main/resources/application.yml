@@ -1,3 +1,5 @@
 spring:
   application:
     name: fabricore
+  profiles:
+    active: local
